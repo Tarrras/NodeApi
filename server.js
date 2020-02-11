@@ -52,11 +52,17 @@ app.post('/cats',function(req, res){
 
 //UPDATE BY ID
 app.put('/cats/:id', function(req,res){
-  var cat = cats.find(function (cat){
-    return cat.id === Number(req.params.id)
-  });
-  cat.name = req.body.name;
-  res.sendStatus(200);
+  db.collection('cats').updateOne(
+    {_id: ObjectID(req.param.id)}, 
+    { $set: {name: req.body.name} },
+    function(err, res){
+      if(err){
+        console.log(err)
+        return res.sendStatus(500);
+      }
+      res.sendStatus(200);
+    }
+  )
 })
 
 
@@ -73,10 +79,16 @@ app.get('/cats', function(req, res){
 
 //DELETE BY ID
 app.delete('/cats/:id', function(req,res){
-  cats = cats.filter(function (cat){
-    return cat.id != Number(req.params.id)
-  });
-  res.sendStatus(200);
+  db.collection('cats').deleteOne(
+    {_id: ObjectID(req.param.id)}, 
+    function(err, res){
+      if(err){
+        console.log(err)
+        return res.sendStatus(500);
+      }
+      res.sendStatus(200);
+    }
+  )
 })
 
 
